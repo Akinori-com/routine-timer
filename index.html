@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>じぶんで できるよ！たいまーあぷり</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="mode-tablet">
+  <div id="app" class="app-container">
+
+    <!-- ヘッダー（共通） -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="app-title" id="appHeaderTitle">あさの じゅんび</h1>
+      </div>
+      
+      <div class="header-right">
+        <!-- 端末切り替えスイッチ（いつでもトグル可能） -->
+        <div class="device-toggle-switch" id="deviceToggleSwitch" role="group" aria-label="たんまつ きりかえ">
+          <button type="button" class="toggle-btn active" id="btnToggleTablet" title="たぶれっと モード">
+            <span class="toggle-icon">📟</span>
+            <span class="toggle-label">たぶれっと</span>
+          </button>
+          <button type="button" class="toggle-btn" id="btnToggleMobile" title="すまほ モード">
+            <span class="toggle-icon">📱</span>
+            <span class="toggle-label">すまほ</span>
+          </button>
+        </div>
+
+        <!-- 連続記録バッジ -->
+        <div class="streak-badge" id="streakBadge">
+          <span class="streak-icon">🔥</span>
+          <span id="streakCount">0</span>にち れんぞく！
+        </div>
+      </div>
+    </header>
+
+    <!-- 【画面1】カテゴリ選択画面（トップ画面：朝の準備 vs 他で使う） -->
+    <section id="screen-category-select" class="screen active">
+      <div class="screen-instructions">
+        <p>なにを がんばる？ えらんでね！</p>
+      </div>
+
+      <div class="category-choice-grid">
+        <button class="category-choice-card cat-morning" id="btnSelectMorning">
+          <span class="cat-icon">☀️</span>
+          <div class="cat-text-group">
+            <span class="cat-title">あさの じゅんび</span>
+            <span class="cat-desc">とうこうご の 5つの じゅんび</span>
+          </div>
+        </button>
+
+        <button class="category-choice-card cat-custom" id="btnSelectCustom">
+          <span class="cat-icon">⭐</span>
+          <div class="cat-text-group">
+            <span class="cat-title">ほかで つかう</span>
+            <span class="cat-desc">じぶんだけの かつどう を やる</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- 【画面2】活動選択画面 -->
+    <section id="screen-menu" class="screen">
+      <div class="screen-top-bar-split">
+        <button class="btn-back" id="btnBackToCategory">← まえの がめん</button>
+        <button class="btn-manage" id="btnOpenManageModal">⚙️ せんせいの へんしゅう</button>
+      </div>
+
+      <div class="screen-instructions">
+        <p>いまから やることを えらぼう！</p>
+      </div>
+
+      <div class="activities-grid" id="activitiesGrid">
+        <!-- JSで活動ボタンを生成 -->
+      </div>
+
+      <div class="admin-area">
+        <button id="btnResetDay" class="btn-subtle">きょうの じゅんびを はじめから やりなおす</button>
+      </div>
+    </section>
+
+    <!-- 【画面3】時間選択画面 -->
+    <section id="screen-time" class="screen">
+      <div class="screen-top-bar">
+        <button class="btn-back" id="btnBackToMenu">← もどる</button>
+      </div>
+
+      <div class="current-activity-banner" id="timeActivityBanner">
+        <!-- 現在選択中の活動表示 -->
+      </div>
+
+      <div class="screen-instructions">
+        <p>なんぷん で やる？ えらんでね</p>
+      </div>
+
+      <div class="time-grid" id="timeGrid">
+        <!-- 1〜10分のボタンを生成 -->
+      </div>
+    </section>
+
+    <!-- 【画面4】カウントダウンタイマー画面 -->
+    <section id="screen-timer" class="screen">
+      <div class="screen-top-bar">
+        <button class="btn-back" id="btnBackToTime">← じかんを えらびなおす</button>
+      </div>
+
+      <div class="current-activity-banner" id="timerActivityBanner">
+        <!-- 現在の活動 -->
+      </div>
+
+      <!-- 視覚タイマー（タイムタイマー式：面が減っていく円形タイマー） -->
+      <div class="timer-visual-container">
+        <svg class="timer-clock-svg" id="timerClockSvg" viewBox="0 0 200 200">
+          <!-- 時計盤の背景 -->
+          <circle class="clock-face-bg" cx="100" cy="100" r="92" />
+          
+          <!-- 時計の目盛り（12箇所） -->
+          <g class="clock-ticks">
+            <line x1="100" y1="12" x2="100" y2="20" stroke="#bdc3c7" stroke-width="3" stroke-linecap="round"/>
+            <line x1="100" y1="180" x2="100" y2="188" stroke="#bdc3c7" stroke-width="3" stroke-linecap="round"/>
+            <line x1="12" y1="100" x2="20" y2="100" stroke="#bdc3c7" stroke-width="3" stroke-linecap="round"/>
+            <line x1="180" y1="100" x2="188" y2="100" stroke="#bdc3c7" stroke-width="3" stroke-linecap="round"/>
+            
+            <circle cx="144" cy="24" r="3" fill="#cbd5e1" />
+            <circle cx="176" cy="56" r="3" fill="#cbd5e1" />
+            <circle cx="176" cy="144" r="3" fill="#cbd5e1" />
+            <circle cx="144" cy="176" r="3" fill="#cbd5e1" />
+            <circle cx="56" cy="176" r="3" fill="#cbd5e1" />
+            <circle cx="24" cy="144" r="3" fill="#cbd5e1" />
+            <circle cx="24" cy="56" r="3" fill="#cbd5e1" />
+            <circle cx="56" cy="24" r="3" fill="#cbd5e1" />
+          </g>
+
+          <!-- 赤い扇形（時間の経過とともに減っていく面） -->
+          <path id="timerPieSlice" class="timer-pie-slice" d="" fill="#ff4757" />
+          <circle id="timerFullCircle" class="timer-pie-full" cx="100" cy="100" r="90" fill="#ff4757" style="display: none;" />
+
+          <!-- 時計の中央ハブ（数字を見やすくする白背景） -->
+          <circle class="clock-center-hub" cx="100" cy="100" r="48" fill="#ffffff" stroke="#e2e8f0" stroke-width="3" />
+        </svg>
+
+        <!-- 中央の数字オーバーレイ -->
+        <div class="timer-text-overlay">
+          <div class="timer-display" id="timerDisplay">00:00</div>
+          <div class="timer-status-hint" id="timerHint">がんばってね！</div>
+        </div>
+      </div>
+
+      <div class="timer-controls">
+        <button id="btnPauseResume" class="btn-action btn-pause">⏸️ とめる</button>
+        <button id="btnFinishEarly" class="btn-action btn-finish">できた！</button>
+      </div>
+    </section>
+
+    <!-- 【画面5】終了確認画面 -->
+    <section id="screen-confirm" class="screen">
+      <div class="confirm-box">
+        <div class="alarm-bell-icon">🔔</div>
+        <h2 class="confirm-title">じかん に なったよ！</h2>
+        <div class="current-activity-banner" id="confirmActivityBanner"></div>
+        <p class="confirm-question">おわったかな？</p>
+
+        <div class="confirm-choices">
+          <button id="btnConfirmDone" class="choice-btn choice-done">
+            <span class="choice-icon">⭕</span>
+            <span class="choice-text">できた！</span>
+          </button>
+          <button id="btnConfirmNotYet" class="choice-btn choice-not-yet">
+            <span class="choice-icon">🔺</span>
+            <span class="choice-text">まだ（もうすこし）</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 【画面6】スタンプ演出画面 -->
+    <section id="screen-stamp" class="screen">
+      <div class="stamp-display-area" id="stampArea">
+        <div class="stamp-badge" id="stampBadge">
+          <div class="stamp-inner" id="stampContent">
+            <!-- スタンプ画像・マーク -->
+          </div>
+        </div>
+        <p class="stamp-message" id="stampMessage"></p>
+        <button id="btnStampNext" class="btn-action btn-primary-big">つぎへ すすむ</button>
+      </div>
+    </section>
+
+    <!-- 【画面6'】追加時間選択画面 -->
+    <section id="screen-extend" class="screen">
+      <div class="screen-instructions">
+        <p>もうすこし じかんを つける？</p>
+      </div>
+
+      <div class="extend-grid" id="extendGrid">
+        <button class="btn-time-card" data-minutes="1">
+          <span class="time-num">1</span>
+          <span class="time-unit">ぷん</span>
+        </button>
+        <button class="btn-time-card" data-minutes="2">
+          <span class="time-num">2</span>
+          <span class="time-unit">ふん</span>
+        </button>
+        <button class="btn-time-card" data-minutes="3">
+          <span class="time-num">3</span>
+          <span class="time-unit">ぷん</span>
+        </button>
+        <button class="btn-time-card" data-minutes="5">
+          <span class="time-num">5</span>
+          <span class="time-unit">ふん</span>
+        </button>
+      </div>
+
+      <div class="extend-skip-container">
+        <button id="btnSkipExtend" class="btn-action btn-secondary-big">
+          じかんは つけないで つぎへ
+        </button>
+      </div>
+    </section>
+
+    <!-- 【画面7】すべて完了画面（大絶賛） -->
+    <section id="screen-all-clear" class="screen">
+      <div class="clear-confetti" id="confettiContainer"></div>
+      <div class="clear-content">
+        <div class="big-hanamaru">💮</div>
+        <h2 class="clear-title">ぜんぶ できたね！<br>すごい！！</h2>
+        <p class="clear-desc">あさの じゅんび、ぜんぶ おわったよ！<br>きょうも いちにち たのしく すごそうね！</p>
+        
+        <div class="clear-streak-card">
+          <p class="streak-card-label">れんぞく きろく</p>
+          <div class="streak-card-number">
+            <span id="finalStreakCount">1</span><span class="streak-unit">にち</span>
+          </div>
+          <p class="streak-cheer" id="streakCheer">あしたも がんばろう！✨</p>
+        </div>
+
+        <button id="btnCompleteBackToMenu" class="btn-action btn-primary-big">
+          めじるしを みる（もどる）
+        </button>
+      </div>
+    </section>
+
+    <!-- 【モーダル】項目の追加・編集管理モーダル（先生・保護者用） -->
+    <div id="modalManage" class="modal-backdrop">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">⚙️ こうもくの へんしゅう</h2>
+          <button class="modal-close" id="btnCloseModal">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <p class="modal-note">かつどう を つくったり けしたり できます。</p>
+
+          <!-- 新規追加フォーム -->
+          <div class="add-item-form">
+            <div class="form-row">
+              <label for="inputItemName">なまえ（平仮名推奨）:</label>
+              <input type="text" id="inputItemName" placeholder="例: かえりの したく" maxlength="20">
+            </div>
+
+            <div class="form-row">
+              <label>あいこん（えらんでね）:</label>
+              <div class="icon-selector" id="iconSelector">
+                <button type="button" class="icon-opt selected" data-icon="🎒">🎒 ランドセル</button>
+                <button type="button" class="icon-opt" data-icon="📖">📖 本・ノート</button>
+                <button type="button" class="icon-opt" data-icon="🧹">🧹 おそうじ</button>
+                <button type="button" class="icon-opt" data-icon="🧴">🧴 手洗い・消毒</button>
+                <button type="button" class="icon-opt" data-icon="🍱">🍱 給食・お弁当</button>
+                <button type="button" class="icon-opt" data-icon="👟">👟 くつばこ</button>
+                <button type="button" class="icon-opt" data-icon="💧">💧 水分ほきゅう</button>
+                <button type="button" class="icon-opt" data-icon="⭐">⭐ 自由</button>
+              </div>
+            </div>
+
+            <button id="btnAddActivity" class="btn-action btn-add-item">➕ あたらしい こうもくを ついか</button>
+          </div>
+
+          <hr class="modal-divider">
+
+          <!-- 登録済みリスト -->
+          <h3 class="modal-sub-title">いまの こうもく いちらん</h3>
+          <div class="current-items-list" id="currentItemsList">
+            <!-- JSで一覧を生成 -->
+          </div>
+
+          <div class="modal-reset-area">
+            <button id="btnResetToDefault" class="btn-subtle-danger">しょき じょうたい に もどす</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
