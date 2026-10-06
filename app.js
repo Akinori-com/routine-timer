@@ -52,7 +52,6 @@ let state = {
   timerSecondsLeft: 0,
   timerTotalSeconds: 0,
   timerInterval: null,
-  isPaused: false,
   streak: 0,
   lastCompletedDate: null
 };
@@ -405,17 +404,11 @@ function startTimer(minutes) {
   updateTimerDisplay();
   showScreen('screen-timer');
 
-  const pauseBtn = document.getElementById('btnPauseResume');
-  pauseBtn.textContent = '⏸️ とめる';
-  pauseBtn.className = 'btn-action btn-pause';
-
   if (state.timerInterval) clearInterval(state.timerInterval);
   state.timerInterval = setInterval(timerTick, 1000);
 }
 
 function timerTick() {
-  if (state.isPaused) return;
-
   state.timerSecondsLeft--;
   updateTimerDisplay();
 
@@ -492,25 +485,6 @@ function finishTimerEarly() {
     state.timerInterval = null;
   }
   markCurrentActivityCompleted(true);
-}
-
-function togglePauseTimer() {
-  playTapSound();
-  state.isPaused = !state.isPaused;
-  const pauseBtn = document.getElementById('btnPauseResume');
-  const hintEl = document.getElementById('timerHint');
-
-  if (state.isPaused) {
-    pauseBtn.textContent = '▶️ はじめる';
-    pauseBtn.style.backgroundColor = '#2ecc71';
-    hintEl.textContent = 'やすみちゅう';
-    hintEl.style.color = '#7f8c8d';
-  } else {
-    pauseBtn.textContent = '⏸️ とめる';
-    pauseBtn.style.backgroundColor = '#f1c40f';
-    hintEl.textContent = 'がんばってね！';
-    hintEl.style.color = '#27ae60';
-  }
 }
 
 // ===== 終了確認 & スタンプ =====
@@ -774,8 +748,7 @@ function setupEventListeners() {
     showScreen('screen-time');
   });
 
-  // タイマー操作
-  document.getElementById('btnPauseResume').addEventListener('click', togglePauseTimer);
+  // タイマー操作（早く終わったときの「できた！」ボタン）
   document.getElementById('btnFinishEarly').addEventListener('click', finishTimerEarly);
 
   // 終了確認

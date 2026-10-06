@@ -595,21 +595,13 @@ body.mode-mobile .choice-btn {
   border: none;
 }
 
-.btn-pause {
-  background-color: #f1c40f;
-  color: #7d6608;
-  box-shadow: 0 6px 0 #b7950b;
-}
-
-.btn-pause:active {
-  transform: translateY(6px);
-  box-shadow: 0 0 0 #b7950b;
-}
-
 .btn-finish {
   background-color: #2ecc71;
   color: #ffffff;
   box-shadow: 0 6px 0 #219653;
+  min-width: 240px;
+  max-width: 380px;
+  width: 100%;
 }
 
 .btn-finish:active {
